@@ -59,6 +59,7 @@ div {
   flex-direction: row;
   -ms-display: flex;
   -ms-flex-direction: row;
+
 }
 
 .responsive-column {
@@ -271,7 +272,11 @@ input:-moz-placeholder {
   min-width: initial;
 }
 
-#payload-column .header-text, #payload-column #payload-initial-message {
+.header-text{
+  display: none;
+}
+
+#payload-column #payload-column #payload-initial-message {
   font-family: Helvetica Neue for IBM, Helvetica Neue, Helvetica, Arial, sans-serif;
   font-size: 1.125rem;
   color: #9E9E9E;
@@ -284,8 +289,14 @@ input:-moz-placeholder {
 .hide {
   display: none;
 }
+.line-numbers{
+  display: none;
+}
 
-.payload .line-numbers, .payload .payload-text {
+.payload-text{
+  display: none;
+}
+.payload, .payload  {
   padding: 0.5rem;
 }
 

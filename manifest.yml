@@ -1,6 +1,6 @@
 applications:
-- name: watson-assistant-simple
+- name: inbra-watson-assistant-simple
   command: npm start
   path: .
-  memory: 256M
+  memory: 1G
   instances: 1
