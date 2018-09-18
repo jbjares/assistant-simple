@@ -1,3 +1,4 @@
+<h1 align="center">Obs.: Antes de subir a aplicação Criar serviço Cloudant e configurar .env com as Credênciais de acesso W.Assitant e Cloudant.</h1>
 <h1 align="center" style="border-bottom: none;">🚀 Watson Assistant (formerly Conversation) Sample Application</h1>
 <h3 align="center">This Node.js app demonstrates the Watson Assistant service in a simple chat interface simulating a cognitive car dashboard.</h3>
 <p align="center">

@@ -16,7 +16,7 @@
 
 var path = require('path');
 // load default variables for testing
-require('dotenv').config({ path: path.join(__dirname, '../../.env.example') });
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
 var app = require('../../app');
 var request = require('supertest');

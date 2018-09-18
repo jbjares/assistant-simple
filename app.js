@@ -19,8 +19,10 @@
 var express = require('express'); // app server
 var bodyParser = require('body-parser'); // parser for post requests
 var AssistantV1 = require('watson-developer-cloud/assistant/v1'); // watson sdk
+let db = require('./libs/db');
 
 var app = express();
+let contextStack = {};
 
 // Bootstrap application settings
 app.use(express.static('./public')); // load UI from public folder
@@ -29,6 +31,8 @@ app.use(bodyParser.json());
 // Create the service wrapper
 
 var assistant = new AssistantV1({
+    username: process.env.ASSISTANT_USERNAME || '<username>',
+    password: process.env.ASSISTANT_PASSWORD || '<password>',
   version: '2018-07-10'
 });
 
@@ -50,6 +54,7 @@ app.post('/api/message', function (req, res) {
 
   // Send the input to the assistant service
   assistant.message(payload, function (err, data) {
+    let conversation_id;
     if (err) {
       return res.status(err.code || 500).json(err);
     }
@@ -73,7 +78,8 @@ app.post('/api/message', function (req, res) {
         }
       }
     }
-
+    conversation_id = data.context.conversation_id;
+    contextStack[conversation_id] = data.context;
     return res.json(updateMessage(payload, data));
   });
 });
@@ -89,8 +95,10 @@ function updateMessage(input, response) {
   if (!response.output) {
     response.output = {};
   } else {
-    return response;
+    db.database(response.context.conversation_id,response.input.text,response.output.text[0]);
+    //return response;
   }
+  /*
   if (response.intents && response.intents[0]) {
     var intent = response.intents[0];
     // Depending on the confidence of the response the app can return different messages.
@@ -105,8 +113,16 @@ function updateMessage(input, response) {
     } else {
       responseText = 'I did not understand your intent';
     }
+    //console.log(responseText);
+  }*/
+  if (response.output.action === 'end_conversation'){
+      console.log('Action: ', response.output.action);
+      // ao finalizar a conversa as informações são armazenadas no banco de dados
+      db.insertData(response.context.conversation_id);
+
+      delete contextStack[response.context.conversation_id];
+      console.log('Contexto deletado!');
   }
-  response.output.text = responseText;
   return response;
 }
 
