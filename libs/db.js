@@ -10,9 +10,9 @@ let cloudant = Cloudant({account:username, password:password});
 
 // Informar o nome do banco de dados a ser criado, ex.: cadastro
 // Remove qualquer banco existente com o nome dado
-cloudant.db.destroy('contatos', function(err) {
+/*cloudant.db.destroy('cadastro', function(err) {
     // Cria o banco com o nome indicado
-    cloudant.db.create('contatos', function() {
+    cloudant.db.create('cadastro', function() {
         // Configura para usar o banco criado
         let db = cloudant.db.use('contatos');
         // função do doc Search Index
@@ -39,7 +39,7 @@ cloudant.db.destroy('contatos', function(err) {
             console.log('Design Document criado');
         });
     });
-});
+});*/
 
 // Variáveis a serem iniciadas
 let inicio = null;
@@ -82,14 +82,16 @@ exports.database = function database(conversation_id,input,output){
     // A id do documento corresponderá a id do usuário do facebook
     dialogStack[conversation_id]=[{_id: conversation_id, inicioConversa: inicio, fimConversa: data,dialogo:dialogo[conversation_id]}];
     console.log('doc: ',JSON.stringify(dialogStack));
+    insertData(conversation_id);
 };
 
-exports.insertData = function insertData(conversation_id){
+insertData = function insertData(conversation_id){
     let _rev = null;
     let doc = dialogStack[conversation_id];
+    //=====================================
     // Alterar para o nome do banco criado
-    let db = cloudant.db.use('contatos');
-    // Verifica se á algum doc que corresponda com a id do usuário.
+    let db = cloudant.db.use('cadastro');
+    // Verifica se há algum doc que corresponda com a id da conversa.
     db.search('Conversation_ID', 'BuscaID', {q: 'id:"' + conversation_id + '"'}, function (er, result) {
         if (er) {
             throw er;
@@ -106,26 +108,33 @@ exports.insertData = function insertData(conversation_id){
             doc[0]._rev = _rev;
             console.log(doc[0]._rev);
         }
-        bulk(conversation_id);
+        bulk();
     });
 
     // Função que cria/atualiza doc em batch
-    function bulk(conversation_id) {
+    function bulk() {
         //console.log('Doc: ', doc);
       db.bulk({docs: doc}, function (err) {
             if (!err) {
-                console.log('Dados armazenados');
-                delete dialogStack[conversation_id];
-                delete dialogo[conversation_id];
-                console.log('dialogStack[%s] e dialogo[%s] deletados!',conversation_id,conversation_id);
+                console.log('Dados armazenados.');
+                //delete dialogStack[conversation_id];
+                //delete dialogo[conversation_id];
+                //console.log('dialogStack[%s] e dialogo[%s] deletados!',conversation_id,conversation_id);
             } else {
                 throw err;
             }
         });
     }
 };
-exports.deleteStacks = function deleteStacks() {
+
+// Depois de 1 hora sem qualquer acesso ao assistente os jsons de dialogos são apagados.
+exports.deleteUserStacks = function deleteUserStacks(conversation_id) {
+    delete dialogStack[conversation_id];
+    delete dialogo[conversation_id];
+    console.log('dialogStack[%s] e dialogo[%s] deletados!',conversation_id,conversation_id);
+};
+exports.deleteAlldbStacks = function deleteAlldbStacks() {
     dialogStack = {};
     dialogo = {};
-    console.log('dialogStack e dialogo deletados por inatividade!');
+    console.log('dialogStack e dialogo em cache, eliminados por inatividade!');
 };

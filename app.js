@@ -119,8 +119,8 @@ function updateMessage(input, response) {
   if (response.output.action === 'end_conversation'){
       console.log('Action: ', response.output.action);
       // ao finalizar a conversa as informações são armazenadas no banco de dados
-      db.insertData(response.context.conversation_id);
-
+      // db.insertData(response.context.conversation_id);
+      db.deleteUserStacks(response.context.conversation_id);
       delete contextStack[response.context.conversation_id];
       console.log('Contexto deletado!');
   }
@@ -133,7 +133,7 @@ function timeOut (){
     timer= setTimeout(send,3600000);
     console.log('Timer started!');
     function send(){
-        db.deleteStacks();
+        db.deleteAlldbStacks();
         contextStack = {};
         console.log('Contextos deletados por inatividade!');
     }
