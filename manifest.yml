@@ -1,5 +1,5 @@
 applications:
-- name: inbra-watson-assistant-simple
+- name: inbra-watson-contact-assistant
   command: npm start
   path: .
   memory: 1G

@@ -91,7 +91,8 @@ app.post('/api/message', function (req, res) {
  * @return {Object}          The response with the updated message
  */
 function updateMessage(input, response) {
-  var responseText = null;
+  //var responseText = null;
+    stopTimeOut();
   if (!response.output) {
     response.output = {};
   } else {
@@ -123,9 +124,25 @@ function updateMessage(input, response) {
       delete contextStack[response.context.conversation_id];
       console.log('Contexto deletado!');
   }
+  timeOut();
   return response;
 }
-
+// Inicia o timer de inatividade do para 1 hora = 3600000 milisegundos, após esse tempo todas os contextos serão eliminados.
+let timer;
+function timeOut (){
+    timer= setTimeout(send,3600000);
+    console.log('Timer started!');
+    function send(){
+        db.deleteStacks();
+        contextStack = {};
+        console.log('Contextos deletados por inatividade!');
+    }
+}
+// Interrompe o timer
+function stopTimeOut (){
+    clearTimeout(timer);
+    console.log('Timer stopped!');
+}
 
 
 module.exports = app;

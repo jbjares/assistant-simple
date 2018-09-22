@@ -4,19 +4,9 @@
   "version": "0.1.1",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test-integration": "casperjs test ./test/integration/test.*.js",
-    "test-integration-runner": "NODE_ENV=test node casper-runner.js",
-    "test": "npm run lint && npm run test-integration-runner",
-    "test-unit": "jest test/unit --coverage",
-    "lint": "eslint .",
-    "autofix": "eslint --fix .",
-    "codecov": "npm run test && (codecov || true)"
+    "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/watson-developer-cloud/assistant-simple.git"
-  },
+  "repository": {},
   "license": "Apache-2.0",
   "dependencies": {
     "@cloudant/cloudant": "^2.3.0",

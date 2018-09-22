@@ -10,11 +10,11 @@ let cloudant = Cloudant({account:username, password:password});
 
 // Informar o nome do banco de dados a ser criado, ex.: cadastro
 // Remove qualquer banco existente com o nome dado
-cloudant.db.destroy('cadastro', function(err) {
+cloudant.db.destroy('contatos', function(err) {
     // Cria o banco com o nome indicado
-    cloudant.db.create('cadastro', function() {
+    cloudant.db.create('contatos', function() {
         // Configura para usar o banco criado
-        let db = cloudant.db.use('cadastro');
+        let db = cloudant.db.use('contatos');
         // função do doc Search Index
         let BuscaID = function (doc) {
             index('id', doc._id,{"store":true, "facet":true});
@@ -68,11 +68,11 @@ exports.database = function database(conversation_id,input,output){
     // Armazena a data a cada iteração, tanto do robo quanto do usuário
     data = new Date(Date.now()).toUTCString();
     // Mensagens vindas do usuario
-    if (input !== null || input !== undefined){
-        entry = data +" Usuário: "+ input;
+    if (input !== null || input !== undefined || input !== 'undefined'){
+        entry = "USUÁRIO: "+ input;
         text[i++] = entry;
-    } if (output !== null || output !== undefined){
-        entry= data +" Assistente: "+ output;
+    } if (output !== null || output !== undefined || output !== 'undefined'){
+        entry = "ASSISTENTE: "+ output;
         text[i++] = entry;
     }
     dialogo[conversation_id]=text;
@@ -84,13 +84,13 @@ exports.database = function database(conversation_id,input,output){
     console.log('doc: ',JSON.stringify(dialogStack));
 };
 
-exports.insertData = async function insertData(conversation_id){
+exports.insertData = function insertData(conversation_id){
     let _rev = null;
     let doc = dialogStack[conversation_id];
     // Alterar para o nome do banco criado
-    let db = cloudant.db.use('cadastro');
+    let db = cloudant.db.use('contatos');
     // Verifica se á algum doc que corresponda com a id do usuário.
-    await db.search('Conversation_ID', 'BuscaID', {q: 'id:"' + conversation_id + '"'}, function (er, result) {
+    db.search('Conversation_ID', 'BuscaID', {q: 'id:"' + conversation_id + '"'}, function (er, result) {
         if (er) {
             throw er;
         }
@@ -110,9 +110,9 @@ exports.insertData = async function insertData(conversation_id){
     });
 
     // Função que cria/atualiza doc em batch
-    async function bulk(conversation_id) {
+    function bulk(conversation_id) {
         //console.log('Doc: ', doc);
-      await db.bulk({docs: doc}, function (err) {
+      db.bulk({docs: doc}, function (err) {
             if (!err) {
                 console.log('Dados armazenados');
                 delete dialogStack[conversation_id];
@@ -123,4 +123,9 @@ exports.insertData = async function insertData(conversation_id){
             }
         });
     }
+};
+exports.deleteStacks = function deleteStacks() {
+    dialogStack = {};
+    dialogo = {};
+    console.log('dialogStack e dialogo deletados por inatividade!');
 };
