@@ -1,0 +1,28 @@
+.btn{
+    position: relative;
+    font-size: 1rem;
+    color: #fff;
+    letter-spacing: 0.015rem;
+    line-height: 1.3125rem;
+    background: #00B4A0;
+    border-radius: 1rem;
+    text-align: left;
+    display: inline-block;
+    margin-top: 0.45rem;
+    margin-left: 0.5rem;
+    min-width: 2.5rem;
+    border-style: solid;
+    border-color: #00b4a0;
+}
+.btn:hover,
+.btn:focus{
+    background: #007664;
+    border-color: #007664;
+}
+.img_background{
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+iframe {
+    -webkit-overflow-scrolling:touch !important;
+}

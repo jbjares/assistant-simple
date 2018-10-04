@@ -78,3 +78,18 @@ var Common = (function () {
     }
   }
 }());
+
+function accountType (response){
+    console.log(response);
+    var res=response;
+
+    var context;
+    var latestResponse = Api.getResponsePayload();
+    if (latestResponse) {
+        context = latestResponse.context;
+    }
+
+    // Send the user message
+    Api.sendRequest(res, context);
+
+}

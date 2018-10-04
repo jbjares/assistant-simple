@@ -10,11 +10,12 @@ let cloudant = Cloudant({account:username, password:password});
 
 // Informar o nome do banco de dados a ser criado, ex.: cadastro
 // Remove qualquer banco existente com o nome dado
-/*cloudant.db.destroy('cadastro', function(err) {
+/*
+cloudant.db.destroy('reunioes', function(err) {
     // Cria o banco com o nome indicado
-    cloudant.db.create('cadastro', function() {
+    cloudant.db.create('reunioes', function() {
         // Configura para usar o banco criado
-        let db = cloudant.db.use('contatos');
+        let db = cloudant.db.use('reunioes');
         // função do doc Search Index
         let BuscaID = function (doc) {
             index('id', doc._id,{"store":true, "facet":true});
@@ -39,7 +40,8 @@ let cloudant = Cloudant({account:username, password:password});
             console.log('Design Document criado');
         });
     });
-});*/
+});
+*/
 
 // Variáveis a serem iniciadas
 let inicio = null;
@@ -90,9 +92,9 @@ insertData = function insertData(conversation_id){
     let doc = dialogStack[conversation_id];
     //=====================================
     // Alterar para o nome do banco criado
-    let db = cloudant.db.use('cadastro');
+    let db = cloudant.db.use('contatos');
     // Verifica se há algum doc que corresponda com a id da conversa.
-    db.search('Conversation_ID', 'BuscaID', {q: 'id:"' + conversation_id + '"'}, function (er, result) {
+    /*db.search('Conversation_ID', 'BuscaID', {q: 'id:"' + conversation_id + '"'}, function (er, result) {
         if (er) {
             throw er;
         }
@@ -109,7 +111,7 @@ insertData = function insertData(conversation_id){
             console.log(doc[0]._rev);
         }
         bulk();
-    });
+    });*/
 
     // Função que cria/atualiza doc em batch
     function bulk() {
