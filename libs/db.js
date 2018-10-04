@@ -90,11 +90,11 @@ exports.database = function database(conversation_id,input,output){
 insertData = function insertData(conversation_id){
     let _rev = null;
     let doc = dialogStack[conversation_id];
-    //=====================================
+    //========================================================================
     // Alterar para o nome do banco criado
-    let db = cloudant.db.use('contatos');
+    let db = cloudant.db.use('cadastro');
     // Verifica se há algum doc que corresponda com a id da conversa.
-    /*db.search('Conversation_ID', 'BuscaID', {q: 'id:"' + conversation_id + '"'}, function (er, result) {
+    db.search('Conversation_ID', 'BuscaID', {q: 'id:"' + conversation_id + '"'}, function (er, result) {
         if (er) {
             throw er;
         }
@@ -111,7 +111,7 @@ insertData = function insertData(conversation_id){
             console.log(doc[0]._rev);
         }
         bulk();
-    });*/
+    });
 
     // Função que cria/atualiza doc em batch
     function bulk() {
